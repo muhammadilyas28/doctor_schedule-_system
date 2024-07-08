@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Modal</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <button id="openModalButton" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Add Event</button>
+
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-2xl font-semibold mb-4 text-blue-600">Add Event</h2>
+            <form id="eventForm" class="space-y-4">
+                <div>
+                    <label for="eventTitle" class="block text-gray-700 font-semibold">Event Title:</label>
+                    <input type="text" id="eventTitle" name="eventTitle" required class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="eventStartTime" class="block text-gray-700 font-semibold">Start Time:</label>
+                    <div class="flex space-x-2">
+                        <input type="time" id="eventStartTime" name="eventStartTime" required class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select id="eventStartAMPM" name="eventStartAMPM" class="w-20 mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label for="eventEndTime" class="block text-gray-700 font-semibold">End Time:</label>
+                    <div class="flex space-x-2">
+                        <input type="time" id="eventEndTime" name="eventEndTime" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select id="eventEndAMPM" name="eventEndAMPM" class="w-20 mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label for="eventDescription" class="block text-gray-700 font-semibold">Description:</label>
+                    <textarea id="eventDescription" name="eventDescription" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div class="flex justify-end">
+                    <input type="submit" value="Add Event" class="bg-blue-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-600">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="calendar" class="w-full max-w-4xl mx-auto mt-10">
+        <div id="calendarGrid" class="grid grid-cols-7 gap-4"></div>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("eventModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("openModalButton");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal 
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Append event to calendar
+        document.getElementById("eventForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById("eventTitle").value;
+            const startTime = document.getElementById("eventStartTime").value;
+            const startAMPM = document.getElementById("eventStartAMPM").value;
+            const endTime = document.getElementById("eventEndTime").value;
+            const endAMPM = document.getElementById("eventEndAMPM").value;
+            const description = document.getElementById("eventDescription").value;
+
+            const calendarGrid = document.getElementById("calendarGrid");
+            const dayDiv = document.createElement("div");
+            dayDiv.classList.add("p-4", "border", "border-gray-300", "rounded-lg", "bg-green-100", "text-green-500", "text-center");
+
+            dayDiv.innerHTML = `
+                <h3 class="font-bold text-lg">${title}</h3>
+                <p>${startTime} ${startAMPM} - ${endTime ? `${endTime} ${endAMPM}` : ''}</p>
+                <p class="text-gray-600">${description}</p>
+            `;
+
+            calendarGrid.appendChild(dayDiv);
+
+            modal.style.display = "none";
+        });
+
+        // Generate initial calendar structure
+        function generateCalendar() {
+            const calendarGrid = document.getElementById("calendarGrid");
+            calendarGrid.innerHTML = '';
+
+            const today = new Date();
+            const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+            const currentDay = today.getDate();
+
+            for (let day = currentDay; day <= daysInMonth; day++) {
+                const date = new Date(today.getFullYear(), today.getMonth(), day);
+                const dayDiv = document.createElement("div");
+                dayDiv.classList.add("p-4", "border", "border-gray-300", "rounded-lg", "text-center");
+
+                dayDiv.innerHTML = `
+                    <p class="font-bold">${day}</p>
+                    <p class="text-gray-600">${date.toDateString()}</p>
+                `;
+
+                calendarGrid.appendChild(dayDiv);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", generateCalendar);
+    </script>
+</body>
+</html>

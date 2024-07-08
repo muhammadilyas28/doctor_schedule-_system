@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Schedule Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4ade80;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
+    <div class="w-full max-w-3xl p-6 bg-white rounded-lg shadow-lg mb-10">
+        <h2 class="text-3xl font-bold mb-6 text-center text-blue-600">Doctor Schedule Form</h2>
+
+        <form id="scheduleForm" class="space-y-6">
+            <!-- Doctor Name -->
+            <div>
+                <label for="doctorName" class="block text-gray-700 font-semibold">Doctor Name</label>
+                <input type="text" id="doctorName" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter doctor's name">
+            </div>
+
+            <!-- Time Schedule Generator -->
+            <div>
+                <label for="timeSchedule" class="block text-gray-700 font-semibold">Time Schedule</label>
+                <div id="timeSchedule" class="space-y-4">
+                    <!-- Monday -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <label for="mondayToggle" class="switch">
+                                <input type="checkbox" id="mondayToggle">
+                                <span class="slider"></span>
+                            </label>
+                            <label for="mondayToggle" class="text-gray-700">Monday</label>
+                        </div>
+                        <div id="mondayTimes" class="flex space-x-4">
+                            <div>
+                                <input type="time" id="mondayStartTime" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <span class="text-gray-700">to</span>
+                            <div>
+                                <input type="time" id="mondayEndTime" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Repeat for other days -->
+                    <!-- Tuesday -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <label for="tuesdayToggle" class="switch">
+                                <input type="checkbox" id="tuesdayToggle">
+                                <span class="slider"></span>
+                            </label>
+                            <label for="tuesdayToggle" class="text-gray-700">Tuesday</label>
+                        </div>
+                        <div id="tuesdayTimes" class="flex space-x-4">
+                            <div>
+                                <input type="time" id="tuesdayStartTime" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <span class="text-gray-700">to</span>
+                            <div>
+                                <input type="time" id="tuesdayEndTime" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Repeat for Wednesday, Thursday, Friday, Saturday, and Sunday -->
+
+                </div>
+            </div>
+
+            <button type="button" onclick="generateSchedule()" class="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300">Generate Schedule</button>
+        </form>
+    </div>
+
+    <div id="calendar" class="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6 hidden">
+        <h3 class="text-2xl font-bold mb-6 text-center text-blue-600">Doctor's Monthly Schedule</h3>
+        <div id="calendarGrid" class="grid grid-cols-7 gap-4"></div>
+    </div>
+
+    <script src="test.js"></script>
+</body>
+</html>
